@@ -1,0 +1,55 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block content %}
+{% include 'core/mainbars.html' %}
+	<div class="main-container">
+	<div class="pd-ltr-20">
+		<div class="row">
+			<div class="col-xl-12 mb-30">
+		<div class="pd-20 card-box mb-30">
+		<div class="clearfix mb-20">
+			<div class="pull-left">
+				<h4 class="text-blue h4">Error Reports</h4>
+			</div>
+			<div class="pull-right">
+				<a href="{% url 'index' %}" class="btn btn-primary btn-sm"><i class="fa fa-arrow-left"></i>&nbsp; Go Back</a>
+			</div>
+		</div>
+			<table class="data-table table nowrap">
+				<thead>
+					<tr>
+						<th>NO</th>
+						<th>Terminal</th>
+						<th>Equipment</th>
+						<th>DATE</th>
+						<th>STATUS</th>
+						<th>FILE</th>
+						<th>DETAILS</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for error in errors %}
+					<tr>
+						<td>{{forloop.counter}}</td>
+						<td>{{error.station}}</td>
+						<td>{{error.equipment}}</td>
+						<td>{{error.created_at}}</td>
+						<td>
+							{% if error.status == "unsolved" %}
+								<span style="padding: 7px 12px;" class="alert alert-danger">UNSOLVED</span>
+							{% else %}
+								<span style="padding: 7px 12px;" class="alert alert-success">SOLVED</span>
+							{% endif %}
+						</td>
+						<td><a href="/media/{{error.file}}" target="_blank"><i style="font-size: 22px;" class="dw dw-file"></i></a></td>
+						<td><a href="{% url 'errorsdetail' error.pk %}"><i style="font-size: 22px;" class="fa fa-search"></i></a></td>
+					</tr><!-- far fa-file-pdf -->
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+			</div>
+		</div>
+	</div>
+	</div>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block content %}
+{% include 'core/mainbars.html' %}
+<div class="main-container">
+	<div class="pd-ltr-20">
+		<div class="card-box pd-20 height-100-p mb-30">
+			<div class="clearfix mb-20">
+				<div class="pull-left">
+					<h4 class="text-blue h3">Notifications</h4>
+				</div>
+			</div>
+		</div>		
+
+		<div class="list-group list-group-flush" style="width:300px;">
+		  {% if notifications %}
+		    <div class="list-group-item py-2">
+		      <a href="javascript:void(0);" class="js-mark-all-as-read" data-url="{% url 'mark_all_as_read' %}">{% 'Mark all as read' %}</a>
+		      ・
+		      <a href="javascript:void(0);" class="js-clear-all" data-url="{% url 'clear_all' %}">{% 'Clear all' %}</a>
+		    </div>
+		    {% for notification in notifications %}
+		      <a href="{% url 'notification_detail' notification.pk %}" class="list-group-item list-group-item-action{% if not notification.is_read %} list-group-item-primary{% endif %}">
+		        <p class="mb-0">{{ notification.render }}</p>
+		        <small class="text-muted">
+		          <span class="{{ Actions.ITEMS|get:notification.action|get:'icon' }} mr-1"></span>
+		          {{ notification.date|date:"D d M Y - P" }}
+		        </small>
+		      </a>
+		    {% endfor %}
+		    <a href="{% url 'notifications' %}" class="list-group-item list-group-item-action text-primary text-center py-2">
+		      {% 'See All' %}
+		    </a>
+		  {% else %}
+		    <div class="list-group-item text-muted text-center">{% 'All cleared up!' %}</div>
+		  {% endif %}
+		</div>
+		
+		<div class="footer-wrap pd-20 mb-20 card-box">
+			Developed by Oyero Habib. You can reach out to me <a href="http://oyerotech.herokuapp.com/">Here</a>.
+		</div>
+	</div>
+</div>
+
+{% endblock %}

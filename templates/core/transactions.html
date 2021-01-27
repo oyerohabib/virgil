@@ -1,0 +1,59 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block content %}
+{% include 'core/mainbars.html' %}
+	<div class="main-container">
+	<div class="pd-ltr-20">
+		<div class="row">
+			<div class="col-xl-12 mb-30">
+		<div class="pd-20 card-box mb-30">
+		<div class="clearfix mb-20">
+			<div class="pull-left">
+				<h4 class="text-blue h4">Transaction Reports</h4>
+			</div>
+			<div class="pull-right">
+				<a href="{% url 'index' %}" class="btn btn-primary btn-sm"><i class="fa fa-arrow-left"></i>&nbsp; Go Back</a>
+			</div>
+		</div>
+			<table class="data-table table nowrap">
+				<thead>
+					<tr>
+						<th>NO</th>
+						<th>USER</th>
+						<th>STATION</th>
+						<th>NO(BUTTS)</th>
+						<th>EST. REVENUE</th>
+						<th>DATE</th>
+						<th>STATUS</th>
+						<th>DETAILS</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for transaction in transactions %}
+					<tr>
+						<td>{{forloop.counter}}</td>
+						<td>{{transaction.user.email}}</td>
+						<td>{{transaction.station}}</td>
+						<td>{{transaction.cigarettecounter}}</td>
+						<td>{{transaction.price}}</td>
+						<td>{{transaction.created_at|date:"M d, Y"}}</td>
+						<td>
+							{% if transaction.status == "pending" %}
+								<span style="padding: 7px 12px;" class="alert alert-info">PENDING</span>
+							{% elif transaction.status == "declined" %}
+								<span style="padding: 7px 12px;" class="alert alert-danger">DECLINED</span>
+							{% else %}
+								<span style="padding: 7px 12px;" class="alert alert-success">COMPLETED</span>
+							{% endif %}
+						</td>
+						<td><a href="{% url 'transactionsdetails' transaction.pk %}"><i style="font-size: 22px;" class="fa fa-search"></i></a></td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+			</div>
+		</div>
+	</div>
+	</div>
+{% endblock %}

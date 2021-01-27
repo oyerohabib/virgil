@@ -1,0 +1,121 @@
+{% load static %}
+<!-- <div class="pre-loader">
+<div class="pre-loader-box">
+	<div class="loader-logo"><img src="{% static 'vendors/images/logo1.png' %}" style="width: 120px; height: 120px;" alt=""></div>
+	<div class='loader-progress' id="progress_div">
+		<div class='bar' id='bar1'></div>
+	</div>
+	<div class='percent' id='percent1'>0%</div>
+	<div class="loading-text">
+		Loading...
+	</div>
+</div>
+</div> -->
+<div class="header">
+	<div class="header-left">
+		<div class="menu-icon dw dw-menu"></div>
+	</div>
+	<div class="header-right">
+<!-- 		<div class="user-notification">
+			<div class="dropdown">
+				<a class="dropdown-toggle no-arrow" href="#" role="button" data-toggle="dropdown">
+					<i class="icon-copy dw dw-notification"></i>
+					<span class="badge notification-active"></span>
+				</a>
+				<div class="dropdown-menu dropdown-menu-right">
+					<div class="notification-list mx-h-350 customscroll">
+						<ul>
+							{% for station in stations %}
+							<li>
+									<h3>{{station.name}}</h3>
+									<p>{{station.country}}</p>
+							</li>
+							{% endfor %}
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div> -->
+		<div class="user-info-dropdown">
+			<div class="dropdown">
+				<a class="dropdown-toggle" href="#" role="button" data-toggle="dropdown">
+					<span class="user-icon">
+						<img src="{{request.user.picture.url}}" alt="">
+					</span>
+					<span class="user-name">{{request.user.firstname}}</span>
+				</a>
+				<div class="dropdown-menu dropdown-menu-right dropdown-menu-icon-list">
+					<a class="dropdown-item" href="{% url 'profile' %}"><i class="dw dw-user1"></i>Profile</a>
+					<a class="dropdown-item" href="{% url 'password_change' %}"><i class="icon-copy dw dw-padlock1"></i>Change Password</a>
+					<a class="dropdown-item" href="{% url 'password_reset' %}"><i class="icon-copy dw dw-padlock1"></i>Reset Password</a>
+					<a class="dropdown-item" href="{% url 'logout' %}"><i class="dw dw-logout"></i>Log Out</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="left-side-bar">
+	<div class="brand-logo">
+		<a href="{% url 'index' %}">
+			DASHBOARD
+		</a>
+		<div class="close-sidebar" data-toggle="left-sidebar-close">
+			<i class="ion-close-round"></i>
+		</div>
+	</div>
+	<div class="menu-block customscroll">
+		<div class="sidebar-menu">
+			<ul id="accordion-menu">
+				<li class="dropdown">
+					<a href="{% url 'index' %}" class="dropdown-toggle no-arrow">
+						<span class="micon dw dw-house-1"></span><span class="mtext">Home</span>
+					</a>
+				</li>
+				<li>
+					<a href="javascript:;" class="dropdown-toggle">
+						<span class="micon icon-copy dw dw-panel6"></span><span class="mtext">Stations</span>
+					</a>
+					<ul class="submenu">
+						<li><a href="{% url 'stations' %}">View Stations</a></li>
+						{% if request.user.user_type.is_admin %}
+						<li><a href="{% url 'addstation' %}">Add New Station</a></li>
+						{% endif %}
+					</ul>
+				</li>
+				{% if request.user.user_type.is_admin %}
+				<li>
+					<a href="javascript:;" class="dropdown-toggle">
+						<span class="micon icon-copy dw dw-user1"></span><span class="mtext">Users</span>
+					</a>
+					<ul class="submenu">
+						<li><a href="{% url 'users' %}">View Users</a></li>
+						<li><a href="{% url 'adduser' %}">Add New User</a></li>
+					</ul>
+				</li>
+				{% endif %}
+				<li>
+					<a href="{% url 'transactions' %}" class="dropdown-toggle no-arrow">
+						<span class="micon icon-copy dw dw-money-1"></span><span class="mtext">Transactions</span>
+					</a>
+				</li>
+				<li>
+					<a href="{% url 'errors' %}" class="dropdown-toggle no-arrow">
+						<span class="micon icon-copy dw dw-trash1"></span><span class="mtext">Errors</span>
+					</a>
+				</li>
+				<li>
+					{% if request.user.user_type.is_admin %}
+					<a href="{% url 'manager_feedback_message' %}" class="dropdown-toggle no-arrow">
+						<span class="micon icon-copy ion-android-mail"></span><span class="mtext">Messages</span>
+					</a>
+					{% elif request.user.user_type.is_manager %}
+					<a href="{% url 'manager_feedback' %}" class="dropdown-toggle no-arrow">
+						<span class="micon icon-copy ion-android-mail"></span><span class="mtext">Messages</span>
+					</a>
+					{% endif %}
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>

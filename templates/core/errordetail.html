@@ -1,0 +1,63 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% include 'core/mainbars.html' %}
+	<div class="main-container">
+		{% include 'core/info_messages.html' %}
+	<div class="pd-ltr-20">
+		<div class="row">
+			<div class="col-xl-12 mb-30">
+		<div class="pd-20 card-box mb-30">
+		<div class="clearfix mb-20">
+			<div class="pull-left">
+				<h4 class="text-blue h4">Error Detail for {{errordetail}}</h4>
+			</div>
+			<div class="pull-right">
+				<a href="{% url 'index' %}" class="btn btn-primary btn-sm"><i class="fa fa-arrow-left"></i>&nbsp; Go Back</a>
+			</div>
+		</div>
+			<table class="data-table table nowrap">
+				<thead>
+					<tr>
+						<th>Terminal</th>
+						<th>Equipment</th>
+						<th>DATE</th>
+						<th>STATUS</th>
+						<th>FILE</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>{{errordetail.station}}</td>
+						<td>{{errordetail.equipment}}</td>
+						<td>{{errordetail.created_at}}</td>
+						<td>
+							{% if errordetail.status == "unsolved" %}
+								<span style="padding: 7px 12px;" class="alert alert-danger">UNSOLVED</span>
+							{% else %}
+								<span style="padding: 7px 12px;" class="alert alert-success">SOLVED</span>
+							{% endif %}
+						</td>
+						<td><a href="/media/{{errordetail.file}}" target="_blank"><i style="font-size: 22px;" class="dw dw-file"></i></a></td>
+					</tr><!-- far fa-file-pdf -->
+				</tbody>
+			</table>
+			<div class="col-xl-12 mb-30">
+				<form method="POST" enctype="multipart/form-data">
+					{% csrf_token %}
+					    {{ e_form.description|as_crispy_field }}
+					    <div class="form-row">
+					      <div class="form-group col-md-2 mb-0">
+					        {{ e_form.status|as_crispy_field }}
+					      </div>
+					    </div>
+					<button type="submit" class="btn btn-primary">Submit</button>
+				</form>
+			</div>
+		</div>
+			</div>
+		</div>
+	</div>
+	</div>
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% include 'core/mainbars.html' %}
+	<div class="main-container">
+		<div class="pd-ltr-20 xs-pd-20-10">
+			<div class="min-height-200px">
+				<div class="page-header">
+					<div class="row">
+						<div class="col-md-12 col-sm-12">
+							<div class="title">
+								<h4>Profile</h4>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 mb-30">
+						<div class="pd-20 card-box height-100-p">
+							<div class="profile-photo">
+								<img src="{{user.get_picture_url}}" class="avatar-photo w-100 h-100">
+							</div>
+							<h5 class="text-center h5 mb-0">{{user.get_fullname}}</h5>
+							<div class="profile-info">
+								<h5 class="mb-20 h5 text-blue">Contact Information</h5>
+								<ul>
+									<li>
+										<span>Email Address:</span>
+										{{user.email}}
+									</li>
+									<li>
+										<span>Phone Number:</span>
+										{{user.telephone}}
+									</li>
+									<li>
+										<span>Address:</span>
+										{{user.address}}
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 mb-30">
+						<div class="pd-20 card-box height-100-p">
+							<div class="profile-info">
+								<h3 class="mb-20 h3 text-blue">Other Information's</h3>
+								<ul>
+									<li>
+										<span>First Name:</span>
+										{{user.firstname}}
+									</li>
+									<li>
+										<span>Last Name:</span>
+										{{user.lastname}}
+									</li>
+									<li>
+										<span>zipcode:</span>
+										{{user.address}}
+									</li>
+									<li>
+										<span>city:</span>
+										{{user.city}}
+									</li>
+									<li>
+										<span>region:</span>
+										{{user.region}}
+									</li>
+									<li>
+										<span>country:</span>
+										{{user.country}}
+									</li>
+									<li>
+										<span>additional_address:</span>
+										{{user.additional_address}}
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="footer-wrap pd-20 mb-20 card-box">
+				Developed by Oyero Habib. You can reach out to me <a href="http://oyerotech.herokuapp.com/">Here</a>.
+			</div>
+		</div>
+	</div>
+{% endblock %}

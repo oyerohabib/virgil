@@ -1,0 +1,59 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% include 'core/mainbars.html' %}
+<div class="main-container">
+	{% include 'core/info_messages.html' %}
+	<div class="contact-directory-list">
+		<ul class="row">
+			{% for user in users %}
+			<li class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+				<div class="contact-directory-box">
+					<div class="contact-dire-info text-center">
+						<div class="contact-avatar">
+							<span>
+								<img src="{{user.get_picture_url}}" alt="">
+							</span>
+						</div>
+						<div class="contact-name">
+							<h4>{{user.get_fullname}}</h4>
+							<p>Country: {{user.country}}.</p>
+							<p>Mobile: {{user.telephone}}.</p>
+							<p>Email: {{user.email}}.</p>
+						</div>
+					</div>
+					<div class="contact-skill text-center mt-n4">
+						<a href="{% url 'deleteuser' user.pk %}"><span class="badge badge-pill badge-primary" type="button">Delete User</span></a>
+								<!--  data-toggle="modal" data-target="#confirmation-modal" -->
+<!-- 							<div class="modal fade" id="confirmation-modal" tabindex="-1" role="dialog" aria-hidden="true">
+								<div class="modal-dialog modal-dialog-centered" role="document">
+									<div class="modal-content">
+										<div class="modal-body text-center font-18">
+											<h4 class="padding-top-30 mb-30 weight-500">Are you sure you want to continue?</h4>
+											<div class="padding-bottom-30 row" style="max-width: 170px; margin: 0 auto;">
+												<div class="col-6">
+													<button type="button" class="btn btn-secondary border-radius-100 btn-block confirmation-btn" data-dismiss="modal"><i class="fa fa-times"></i></button>
+													NO
+												</div>
+												<div class="col-6">
+													<button type="button" class="btn btn-primary border-radius-100 btn-block confirmation-btn" data-dismiss="modal"><i class="fa fa-check"></i></button>
+													YES
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div> -->
+					</div>
+					<div class="view-contact">
+						<a href="{% url 'viewuserprofile' user.pk %}">View Profile</a>
+					</div>
+				</div>
+			</li>
+			{% endfor %}
+		</ul>
+	</div>
+</div>
+
+{% endblock %}

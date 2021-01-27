@@ -1,0 +1,43 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block content %}
+{% include 'core/mainbars.html' %}
+	<div class="main-container">
+	<div class="pd-ltr-20">
+		<div class="row">
+			<div class="col-xl-12 mb-30">
+		<div class="pd-20 card-box mb-30">
+		<div class="clearfix mb-20">
+			<div class="pull-left">
+				<h4 class="text-blue h4">Send Message to Admin</h4>
+			</div>
+			<div class="pull-right">
+				<a href="{% url 'index' %}" class="btn btn-primary btn-sm"><i class="fa fa-arrow-left"></i>&nbsp; Go Back</a>
+			</div>
+		</div>
+			<table class="data-table table nowrap">
+				<thead>
+					<tr>
+						<th>NO</th>
+						<th>MESSAGE</th>
+						<th>REPLY</th>
+						<th>CREATED DATE</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for message in messages %}
+					<tr>
+						<td>{{forloop.counter}}</td>
+						<td>{{message.feedback}}</td>
+						<td>{{message.feedback_reply}}</td>
+						<td>{{message.created_at}}</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+			</div>
+		</div>
+	</div>
+	</div>
+{% endblock %}
