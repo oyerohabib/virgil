@@ -154,7 +154,7 @@ class Station(models.Model):
 
     STATION_STATUS = (
             ("pending", "pending"),
-            ("declined", "declined"),
+            # ("declined", "declined"),
             ("active", "active"),
             ("blocked", "blocked")
         )
@@ -168,7 +168,7 @@ class Station(models.Model):
     country = models.CharField(max_length=20)
     ipaddress = models.CharField(max_length=20)
     macaddress = models.CharField(max_length=20)
-    cigarettecounter = models.IntegerField()
+    # cigarettecounter = models.IntegerField()
     status = models.CharField(default="pending", choices=STATION_STATUS, max_length=10)
 
     def __str__(self):

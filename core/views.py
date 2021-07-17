@@ -25,6 +25,7 @@ from django.views.decorators.http import require_POST
 @login_required
 def Dashboard(request):
 
+    page_title = "Dashboard"
     Errors = Error.objects.all().order_by("-id")[:4]
     Transactions = Transaction.objects.all().order_by("-id")[:4]
 
@@ -39,22 +40,24 @@ def Dashboard(request):
         for m in range(1, 13)
     }
 
-    context = {"errors":Errors, "transactions":Transactions, "data":data}
+    context = {"page_title":page_title, "errors":Errors, "transactions":Transactions, "data":data}
 
     return render(request, "core/index.html", context)
 
 @login_required
 def Errors(request):
 
+    page_title = "List of Errors"
     Errors = Error.objects.all().order_by("-id")
 
-    context = {"errors":Errors}
+    context = {"page_title":page_title, "errors":Errors}
 
     return render(request, "core/errors.html", context)
 
 @login_required
 def ErrorDetail(request, pk):
-
+    
+    page_title = "Error Detail Page"
     errordetail = Error.objects.get(id=pk)
     e_form = UpdateErrorForm(instance=errordetail)
     mydict={'e_form':e_form}
@@ -65,22 +68,24 @@ def ErrorDetail(request, pk):
             return redirect(request.path)
             messages.success(request, "Error Updated Successfully")
 
-    context = {"errordetail":errordetail, 'e_form':e_form}
+    context = {"page_title":page_title, "errordetail":errordetail, 'e_form':e_form}
 
     return render(request, "core/errordetail.html", context)
 
 @login_required
 def Transactions(request):
 
+    page_title = "List of Transactions"
     Transactions = Transaction.objects.all().order_by("-id")
 
-    context = {"transactions":Transactions}
+    context = {"page_title":page_title, "transactions":Transactions}
 
     return render(request, "core/transactions.html", context)
 
 @login_required
 def TransactionDetail(request, pk):
 
+    page_title = "Transaction Detail Page"
     transactionsdetails = Transaction.objects.get(id=pk)
     form = UpdateTransactionForm(instance=transactionsdetails)
     if request.method == 'POST':
@@ -90,16 +95,17 @@ def TransactionDetail(request, pk):
             messages.success(request, "Transaction Form updated Successfully")
             return redirect(request.path)
 
-    context = {"transactions":transactionsdetails, 'form':form}
+    context = {"page_title":page_title, "transactions":transactionsdetails, 'form':form}
 
     return render(request, "core/transactionsdetails.html", context)
 
 @login_required
 def Stations(request):
 
+    page_title = "List of Stations"
     Stations = Station.objects.all().order_by("-id")
 
-    context = {"stations":Stations}
+    context = {"page_title":page_title, "stations":Stations}
 
     return render(request, "core/stations.html", context)
 
@@ -107,6 +113,7 @@ def Stations(request):
 @admin_required()
 def AddStation(request):
 
+    page_title = "Add Station Page"
     form = StationForm()
     if request.method == 'POST':
         form = StationForm(request.POST)
@@ -115,7 +122,7 @@ def AddStation(request):
             messages.success(request, "Station Added Successfully")
             return redirect('stations')
 
-    context = {"form":form}
+    context = {"page_title":page_title, "form":form}
 
     return render(request, "core/addstation.html", context)
 
@@ -123,6 +130,7 @@ def AddStation(request):
 @admin_required()
 def EditStation(request, pk):
 
+    page_title = "Edit Station Page"
     station = Station.objects.get(id=pk)
 
     form = StationForm(instance=station)
@@ -133,7 +141,7 @@ def EditStation(request, pk):
             messages.success(request, "Station Edited Successfully")
             return redirect('stations')
 
-    context = {"form":form}
+    context = {"page_title":page_title, "form":form}
 
     return render(request, "core/editstation.html", context)
 
@@ -141,12 +149,13 @@ def EditStation(request, pk):
 @admin_required()
 def DeleteStation(request, pk):
 
+    page_title = "Delete Station"
     station = Station.objects.get(id=pk)
     station.delete()
     messages.error(request, "Station Deleted Successfully")
     return redirect('stations')
 
-    context = {"station":station}
+    context = {"page_title":page_title, "station":station}
 
     return render(request, "core/stations.html", context)
 
@@ -154,15 +163,17 @@ def DeleteStation(request, pk):
 @admin_required
 def Users(request):
 
+    page_title = "All Users"
     Users = User.objects.all().exclude(id=request.user.pk).order_by("-id")
 
-    context = {"users":Users}
+    context = {"page_title":page_title, "users":Users}
     return render(request, "core/users.html", context)
 
 @login_required
 @admin_required
 def AddUser(request):
 
+    page_title = "Add New User"
     if request.method == "POST":
         email = request.POST.get('email')
         telephone = request.POST.get('telephone')
@@ -212,7 +223,7 @@ def AddUser(request):
             messages.error(request, "Failed to Create User!" + str(e))
             return redirect('users')
 
-    return render(request, "core/adduser.html")
+    return render(request, "core/adduser.html", {"page_title": page_title})
 
 class ActivateAccount(View):
 
@@ -237,8 +248,9 @@ class ActivateAccount(View):
 @login_required
 @admin_required
 def ViewUserProfile(request, pk):
+    page_title = "User Profile"
     user = User.objects.get(id=pk)
-    context = {"user":user}
+    context = {"page_title":page_title, "user":user}
     return render(request, "core/viewuserprofile.html", context)
 
 @login_required
@@ -250,10 +262,9 @@ def DeleteUser(request, pk):
     return redirect('users')
 
 def manager_feedback_message(request):
+    page_title = "Manage Feedback Message"
     feedbacks = Message.objects.all().order_by("-id")
-    context = {
-        "feedbacks": feedbacks
-    }
+    context = {"page_title":page_title, "feedbacks": feedbacks}
     return render(request, 'core/reply_message.html', context)
 
 
@@ -271,11 +282,10 @@ def manager_feedback_message_reply(request):
         return HttpResponse("False")
 
 def manager_feedback(request):
+    page_title = "Manager Feedback"
     user_obj = User.objects.get(id=request.user.id)
     feedback_data = Message.objects.filter(user_id=user_obj).order_by("-id")
-    context = {
-        "feedback_data": feedback_data
-    }
+    context = {"page_title":page_title, "feedback_data": feedback_data}
     return render(request, 'core/manager_message.html', context)
 
 
@@ -299,6 +309,7 @@ def manager_feedback_save(request):
 @login_required()
 def Profile(request):
 
+    page_title = "Profile Page"
     user_id = request.user.id
     user = User.objects.get(id=user_id)
 
@@ -309,7 +320,7 @@ def Profile(request):
             form.save()
             return redirect('profile')
 
-    context = {"user":user, "form":form}
+    context = {"page_title":page_title, "user":user, "form":form}
 
     return render(request, "auth/profile.html", context)
 
@@ -350,10 +361,7 @@ class NotificationDetailView(DetailView):
 def unread(request):
     notifications = Notification.objects.filter(user=request.user).order_by('-date')
     notifications.update(is_seen=True)
-    context = {
-        'notifications': notifications[:5],
-        'Actions': Actions
-    }
+    context = {"page_title":page_title, 'notifications': notifications[:5], 'Actions': Actions}
     html = render_to_string('notifications/_unread.html', context, request)
     return JsonResponse({'html': html})
 
@@ -385,6 +393,7 @@ def clear_all(request):
 
     
 def Login(request):
+    page_title = "Login Page"
     if request.user.is_authenticated:
         return redirect('/')
 
@@ -404,16 +413,16 @@ def Login(request):
             else:
                 messages.info(request, 'Email or Password is incorrect')
 
-        return render(request, "auth/login.html")
+        return render(request, "auth/login.html", {"page_title":page_title})
 
 def Logout(request):
 	logout(request)
 	return redirect('login')
 
 def Error404(request, exception):
-	return render(request, "error/404.html")
+    page_title = "Page Not Found"
+    return render(request, "error/404.html", {"page_title":page_title})
 
 def Error500(request):
-	return render(request, "error/500.html")
-
-# https://drive.google.com/file/d/1yyOx5YyGZHF99YoeAzPD6QxfUy8_HW8h/view?usp=sharing
+    page_title = "Server Error"
+    return render(request, "error/500.html", {"page_title":page_title})
