@@ -7,6 +7,7 @@
 	{% include 'core/info_messages.html' %}
 	<div class="contact-directory-list">
 		<ul class="row">
+			{% if users %}
 			{% for user in users %}
 			<li class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
 				<div class="contact-directory-box">
@@ -52,6 +53,18 @@
 				</div>
 			</li>
 			{% endfor %}
+			{% else %}
+			<div class="main-container" style="padding: 50px;">
+				<div class="pd-20 xs-pd-20-10">
+					<div class="min-height-200px">
+						<div class="pd-30 card-box mb-30 text-center" style="min-height: 50vh;">
+							<p style="font-size: 18px; margin-top: 50px;" class="text-center">No Users Added Yet</p>
+							<a href="{% url 'adduser' %}" class="btn btn-primary text-center w-25">Add New User</a>
+						</div>
+					</div>
+				</div>
+			</div>	
+			{% endif %}
 		</ul>
 	</div>
 </div>

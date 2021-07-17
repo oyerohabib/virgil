@@ -29,7 +29,7 @@ def Dashboard(request):
     Errors = Error.objects.all().order_by("-id")[:4]
     Transactions = Transaction.objects.all().order_by("-id")[:4]
 
-    queryset = Transaction.objects.values('created_at__month').annotate(sum= Sum('cigarettecounter')).order_by('created_at__month')
+    queryset = Transaction.objects.values('created_at__month').annotate(sum= Sum('cigarettecounter')).filter(status="completed").order_by('created_at__month')
 
     data = {
         r['created_at__month']: r['sum'] for r in queryset
@@ -217,7 +217,7 @@ def AddUser(request):
             })
             send_mail(subject, message, None, recipients, fail_silently=False)
 
-            messages.success(request, ('Please Confirm your email to complete registration.'))
+            messages.success(request, ('Please User with email - {email} should confirm your email to complete registration.'.format(email=user.email)))
             return redirect('users')
         except Exception as e:
             messages.error(request, "Failed to Create User!" + str(e))

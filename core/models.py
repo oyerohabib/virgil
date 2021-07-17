@@ -179,6 +179,7 @@ class Transaction(models.Model):
     TRANSACTION_STATUS = (
             ("pending", "pending"),
             ("declined", "declined"),
+            ("modify", "modify"),
             ("completed", "completed")
         )
 

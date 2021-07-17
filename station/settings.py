@@ -138,7 +138,7 @@ STATIC_ROOT = 'staticfile/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = "media"
 
-DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage" 
+# DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage" 
 
 # CUSTOM USER SETTINGS
 AUTH_USER_MODEL = 'core.User'
@@ -161,11 +161,11 @@ EMAIL_HOST_PASSWORD = 'oiflfedcajskmefq'
 
 django_heroku.settings(locals())
 
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': "oyerotech-herokuapp-com",
-    'API_KEY': "523415746235479",
-    'API_SECRET': "_5rnbu30qW0JbN0pGCM-6s6IqyY",
-}
+# CLOUDINARY_STORAGE = {
+#     'CLOUD_NAME': "oyerotech-herokuapp-com",
+#     'API_KEY': "523415746235479",
+#     'API_SECRET': "_5rnbu30qW0JbN0pGCM-6s6IqyY",
+# }
 
 SESSION_COOKIE_AGE = 900
 SESSION_SAVE_EVERY_REQUEST = True
