@@ -15,9 +15,9 @@
 						</div>
 						<form method="POST">
 							{% csrf_token %}
-		                      {% for message in messages %}
-		                        <p class="btn btn-danger btn-block btn-user">{{message}}</p>
-		                      {% endfor %}
+							{% for message in messages %}
+								<p class="btn btn-danger btn-block btn-user">{{message}}</p>
+							{% endfor %}
 							<div class="input-group custom">
 								<input type="text" class="form-control form-control-lg" name="email" placeholder="Email" required>
 								<div class="input-group-append custom">
@@ -37,7 +37,8 @@
 									</div>
 								</div>
 								<div class="col-sm-12 mt-3">
-									<h6>Forgot Password, <a href="{% url 'password_reset' %}" style="color: blue;">click here to reset.</a></h6>
+									<h6>Forgot Password, <a href="{% url 'password_reset' %}" style="color: blue;">click here to reset.</a></h6><br>
+									<h6><a href="https://translate.google.com/translate?hl=fr&prev=_t&sl=fr&tl=en&u=https://vrm.victronenergy.com/installation-overview" style="color: blue;">Quick access to VRM portal</a></h6>
 								</div>
 							</div>
 						</form>
