@@ -14,7 +14,7 @@
             </div>
         </div>
     </div>
-    {% if feed.user != request.user %}
+    {% if feed.user != request.user and not feed.is_closed %}
         <a href="{% url 'close_feed' id=feed.id %}">
             <button class="btn btn-danger text-right m-3">
                 Close Conversation
