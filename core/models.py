@@ -239,15 +239,24 @@ class Solution(models.Model):
     def __str__(self):
         return "Solution for " + str(self.error) + " by " + str(self.user)
 
+# model for a feedback message
+class FeedBack(models.Model):
+    name = models.CharField(max_length=20)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    is_closed = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.name
+
 class Message(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    feedback = models.TextField()
+    message_in = models.ForeignKey(FeedBack, on_delete=models.CASCADE)
     feedback_reply = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return "Message Sent by " + str(self.user_id)
+        return str(self.feedback_reply)
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)

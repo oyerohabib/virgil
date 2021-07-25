@@ -1,0 +1,20 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block content %}
+{% include 'core/mainbars.html' %}
+<div class="main-container">
+    <div class="container">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-body">
+                    {% if feed.is_closed %}
+                        <p>
+                            feedback Conversation was closed sucessfully.
+                        </p>
+                    {% endif %}
+                </h3>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block content %}
+{% include 'core/mainbars.html' %}
+<div class="main-container">
+    <div class="pd-ltr-20">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Messages</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% if feed.user != request.user %}
+        <a href="{% url 'close_feed' id=feed.id %}">
+            <button class="btn btn-danger text-right m-3">
+                Close Conversation
+            </button>
+        </a>
+    {% endif %}
+    <div class="container text-center">
+        {% if feed.is_closed %}
+            <div class="container">
+                <div class="card card-danger p-3">
+                    <h4 class="text-left text-danger">
+                        Conversation is closed. You can only read.
+                    </h4>
+                </div>
+            </div>
+        {% endif %}
+        
+        {% if msgs.0 %}
+            
+        {% else %}
+            <div class="container mt-5 mb-5">
+                <div class="card card-danger p-3">
+                    <h4 class="text-left text-danger">
+                        No conversations Yet.
+                    </h4>
+                </div>
+            </div>
+        {% endif %}
+            
+
+        {% for msg in msgs %}
+            
+            {% if msg.user_id == feed.user %}
+                <div class="container text-right p-3" style="background-color: rgb(17, 108, 141); color: white;">
+                    {{msg.feedback_reply}}
+                </div>
+            {% else %}
+                <div class="container text-left p-3">
+                    {{ msg.feedback_reply }}
+                </div>
+            {% endif %}
+                
+        {% endfor %}
+
+        <form action="{% url 'feeds' id=feed.id %}" method="post" class="mt-4">
+            {% csrf_token %}
+            <textarea class="form-control" rows="5" id="feedback_reply" name="feedback_reply" 
+            {% if feed.is_closed %}
+                disabled
+            {% endif %}
+                ></textarea>
+            <button type="submit" class="btn btn-primary mt-3 text-left">Send Reply</button>
+        </form>
+        <!-- <div class="container">
+            <div class="card card-danger">
+                <h4 class="text-left text-danger">
+                    Error: No Messages Yet.
+                </h4>
+            </div>
+        </div> -->
+            
+    </div>
+
+</div>
+{% endblock %}

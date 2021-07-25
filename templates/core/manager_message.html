@@ -34,16 +34,16 @@
                         </div>
                     </div>
                     {% endif %}
-                    <form method="POST" action="{% url 'manager_feedback_save' %}">
+                    <form method="POST" action="{% url 'manager_feedback' %}">
                         {% csrf_token %}
                         <div class="card-body">
                             <div class="form-group">
-                                <label>Feedback Message </label>
-                                <textarea name="feedback_message" class="form-control" rows="6" placeholder="Feedback Message"></textarea>
+                                <label>Feedback Title </label>
+                                <textarea name="feedback_message" class="form-control" rows="6" placeholder="Feedback Title"></textarea>
                             </div>
                         </div>
                         <div class="card-footer">
-                            <button type="submit" class="btn btn-primary">Leave a Feedback</button>
+                            <button type="submit" class="btn btn-primary">Start Conversation</button>
                         </div>
                     </form>
                 </div>
@@ -61,7 +61,7 @@
                             <thead class="thead-light">
                                 <tr>
                                     <th>#ID</th>
-                                    <th>Feedback Message</th>
+                                    <th>Feedback Name</th>
                                     <th>Feedback Reply</th>
                                 </tr>
                             </thead>
@@ -69,13 +69,9 @@
                             {% for row in feedback_data %}
                             <tr>
                                 <td>{{ row.id }}</td>
-                                <td>{{ row.feedback }}</td>
+                                <td>{{ row.name }}</td>
                                 <td>
-                                    {% if row.feedback_reply == "" %}
-                                        <button class="btn btn-info" style="cursor: default; padding: 6px!important;" disabled>Awaiting Reply</button>
-                                    {% else %}
-                                        {{ row.feedback_reply }}
-                                    {% endif %}
+                                    <a href="{% url 'feeds' id=row.id %}">Reply</a>
                                 </td>
                             </tr>
                             {% endfor %}

@@ -17,9 +17,9 @@
                                     <th>ID</th>
                                     <th>Telephone</th>
                                     <th>User Email</th>
-                                    <th>Message</th>
-                                    <th>Sent On</th>
-                                    <th>Reply</th>
+                                    <th>Feedback</th>
+                                    <!-- <th>Started On</th> -->
+                                    <th>Replies</th>
                                 </tr>
                             </thead>
                             {% for feedback in feedbacks %}
@@ -28,15 +28,9 @@
                                     <td>{{ feedback.id }}</td>
                                     <td>{{ feedback.user_id.telephone }}</td>
                                     <td>{{ feedback.user_id.email }}</td>
-                                    <td>{{ feedback.feedback }}</td>
-                                    <td>{{ feedback.created_at|date:"M d, Y" }}</td>
-                                    <td>
-                                        {% if feedback.feedback_reply == "" %}
-                                            <button class="btn btn-success reply_open_modal" style="padding: 6px 9px!important;" data-toggle="modal" data-target="#replyModal">Reply</button>
-                                        {% else %}
-                                            {{ feedback.feedback_reply }}
-                                        {% endif %}
-                                    </td>
+                                    <!-- <td>{{ feedback.feedback }}</td> -->
+                                    <td>{{ feedback.name }}</td>
+                                    <td><a href="{% url 'feeds' id=feedback.id %}">Reply</a></td>
                                 </tr>
                             </tbody>
                             {% endfor %}

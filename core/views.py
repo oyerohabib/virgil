@@ -25,11 +25,17 @@ from django.views.decorators.http import require_POST
 @login_required
 def Dashboard(request):
 
+    today = datetime.datetime.now()
+
     page_title = "Dashboard"
     Errors = Error.objects.all().order_by("-id")[:4]
     Transactions = Transaction.objects.all().order_by("-id")[:4]
 
     queryset = Transaction.objects.values('created_at__month').annotate(sum= Sum('cigarettecounter')).filter(status="completed").order_by('created_at__month')
+
+    queryset2 = Transaction.objects.values('created_at__day').filter(created_at__month=today.month, status="completed").annotate(sum= Sum('cigarettecounter')).order_by('created_at__month')
+
+    queryset3 = Transaction.objects.values('created_at__year').filter(created_at__month=today.month, status="completed").annotate(sum= Sum('cigarettecounter')).order_by('created_at__month')
 
     data = {
         r['created_at__month']: r['sum'] for r in queryset
@@ -40,7 +46,37 @@ def Dashboard(request):
         for m in range(1, 13)
     }
 
-    context = {"page_title":page_title, "errors":Errors, "transactions":Transactions, "data":data}
+    days = {
+        r['created_at__day']: r['sum'] for r in queryset2
+    }
+
+    # print(days)
+
+    data2 = {
+        datetime.date(1900, today.month, m).strftime('%d'): days.get(m, 0)
+        for m in range(1, 32)
+    }
+
+    data3 = {
+        r['created_at__year']: r['sum'] for r in queryset3
+    }
+    
+    data4 = {
+        datetime.date(m, today.month, 1).strftime('%Y'): data3.get(m, 0)
+        for m in range(1999, today.year+1)
+    }
+
+    context = {"page_title":page_title, "errors":Errors, "transactions":Transactions, "data":data2, "monthly": data, "yearly": data4}
+
+    # print(data4)
+    try:
+        if request.GET['chart_type'] == 'monthly':
+            context = {"page_title":page_title, "errors":Errors, "transactions":Transactions, "data":data}
+        if request.GET['chart_type'] == 'yearly':
+            context = {"page_title":page_title, "errors":Errors, "transactions":Transactions, "data":data4}
+        
+    except Exception as e:
+        pass
 
     return render(request, "core/index.html", context)
 
@@ -263,9 +299,27 @@ def DeleteUser(request, pk):
 
 def manager_feedback_message(request):
     page_title = "Manage Feedback Message"
-    feedbacks = Message.objects.all().order_by("-id")
+    feedbacks = FeedBack.objects.all().order_by("-id")
     context = {"page_title":page_title, "feedbacks": feedbacks}
     return render(request, 'core/reply_message.html', context)
+
+def feeds(request, id):
+    page_title = "Massages"
+
+    feed = FeedBack.objects.get(id=id)
+
+    msgs = Message.objects.filter(message_in=feed).order_by("created_at")
+
+    if request.POST:
+        # print()
+        msg = Message.objects.create(user_id=request.user, message_in=feed, feedback_reply=request.POST['feedback_reply'])
+        msg.save()
+        return redirect(f'/feeds/{id}')
+
+    context = {"page_title":page_title, "msgs": msgs, "feed": feed}
+
+    return render(request, 'core/feed_message.html', context)
+
 
 
 @csrf_exempt
@@ -284,9 +338,26 @@ def manager_feedback_message_reply(request):
 def manager_feedback(request):
     page_title = "Manager Feedback"
     user_obj = User.objects.get(id=request.user.id)
-    feedback_data = Message.objects.filter(user_id=user_obj).order_by("-id")
+    feedback_data = FeedBack.objects.filter(user=user_obj).order_by("-id")
+
+    if request.POST:
+        # print()
+        feed = FeedBack.objects.create(user=request.user, name=request.POST['feedback_message'])
+        feed.save()
+        return redirect(f'/feeds/{feed.id}')
+
     context = {"page_title":page_title, "feedback_data": feedback_data}
     return render(request, 'core/manager_message.html', context)
+
+def close_feed(request, id):
+    page_title = "Close Feedback"
+    feedback_data = FeedBack.objects.get(id=id)
+
+    feedback_data.is_closed = True
+    feedback_data.save()
+
+    context = {"page_title":page_title, "feed": feedback_data}
+    return render(request, 'core/close_feed.html', context)
 
 
 def manager_feedback_save(request):
