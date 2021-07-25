@@ -31,11 +31,11 @@ def Dashboard(request):
     Errors = Error.objects.all().order_by("-id")[:4]
     Transactions = Transaction.objects.all().order_by("-id")[:4]
 
-    queryset = Transaction.objects.values('created_at__month').annotate(sum= Sum('cigarettecounter')).filter(status="completed").order_by('created_at__month')
+    queryset = Transaction.objects.values('created_at__month').annotate(sum= Sum('cigarettecounter')).filter(created_at__year=today.year, status="completed").order_by('created_at__month')
 
-    queryset2 = Transaction.objects.values('created_at__day').filter(created_at__month=today.month, status="completed").annotate(sum= Sum('cigarettecounter')).order_by('created_at__month')
+    queryset2 = Transaction.objects.values('created_at__day').filter(created_at__year=today.year, status="completed").annotate(sum= Sum('cigarettecounter')).order_by('created_at__month')
 
-    queryset3 = Transaction.objects.values('created_at__year').filter(created_at__month=today.month, status="completed").annotate(sum= Sum('cigarettecounter')).order_by('created_at__month')
+    queryset3 = Transaction.objects.values('created_at__year').filter(status="completed").annotate(sum= Sum('cigarettecounter')).order_by('created_at__year')
 
     data = {
         r['created_at__month']: r['sum'] for r in queryset
@@ -50,7 +50,7 @@ def Dashboard(request):
         r['created_at__day']: r['sum'] for r in queryset2
     }
 
-    # print(days)
+    print(queryset3)
 
     data2 = {
         datetime.date(1900, today.month, m).strftime('%d'): days.get(m, 0)
@@ -63,12 +63,12 @@ def Dashboard(request):
     
     data4 = {
         datetime.date(m, today.month, 1).strftime('%Y'): data3.get(m, 0)
-        for m in range(1999, today.year+1)
+        for m in range(today.year-11, today.year+1)
     }
 
     context = {"page_title":page_title, "errors":Errors, "transactions":Transactions, "data":data2, "monthly": data, "yearly": data4}
 
-    # print(data4)
+    print(data4)
     try:
         if request.GET['chart_type'] == 'monthly':
             context = {"page_title":page_title, "errors":Errors, "transactions":Transactions, "data":data}
