@@ -68,7 +68,7 @@ def Dashboard(request):
 
     context = {"page_title":page_title, "errors":Errors, "transactions":Transactions, "data":data2, "monthly": data, "yearly": data4}
 
-    # print(data4)
+    print(data4)
     try:
         if request.GET['chart_type'] == 'monthly':
             context = {"page_title":page_title, "errors":Errors, "transactions":Transactions, "data":data}
@@ -304,7 +304,7 @@ def manager_feedback_message(request):
     return render(request, 'core/reply_message.html', context)
 
 def feeds(request, id):
-    page_title = "Massages"
+    page_title = "Messages"
 
     feed = FeedBack.objects.get(id=id)
 

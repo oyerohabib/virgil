@@ -26,8 +26,8 @@
                             <tbody>
                                 <tr>
                                     <td>{{ feedback.id }}</td>
-                                    <td>{{ feedback.user_id.telephone }}</td>
-                                    <td>{{ feedback.user_id.email }}</td>
+                                    <td>{{ feedback.user.telephone }}</td>
+                                    <td>{{ feedback.user.email }}</td>
                                     <!-- <td>{{ feedback.feedback }}</td> -->
                                     <td>{{ feedback.name }}</td>
                                     <td><a href="{% url 'feeds' id=feedback.id %}">Reply</a></td>
