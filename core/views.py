@@ -304,7 +304,7 @@ def manager_feedback_message(request):
     return render(request, 'core/reply_message.html', context)
 
 def feeds(request, id):
-    page_title = "Massages"
+    page_title = "Messages"
 
     feed = FeedBack.objects.get(id=id)
 
