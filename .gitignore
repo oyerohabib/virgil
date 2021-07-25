@@ -141,3 +141,4 @@ media/files/
 core/migrations/__pycache__/
 core/__pycache__/
 core/migrations/
+core/__pycache__/views.cpython-37.pyc

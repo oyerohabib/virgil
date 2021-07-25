@@ -23,27 +23,12 @@
     {% endif %}
     <div class="container text-center">
         {% if feed.is_closed %}
-            <div class="container">
+            <div class="container my-2">
                 <div class="card card-danger p-3">
                     <h4 class="text-left text-danger">
                         Conversation is closed. You can only read.
                     </h4>
-                </div>
-
-                {% for msg in msgs %}
-                    
-                    {% if msg.user_id == feed.user %}
-                        <div class="container text-right p-3" style="background-color: rgb(17, 108, 141); color: white;">
-                            {{msg.feedback_reply}}
-                        </div>
-                    {% else %}
-                        <div class="container text-left p-3">
-                            {{ msg.feedback_reply }}
-                        </div>
-                    {% endif %}
-                        
-                {% endfor %}
-                
+                </div>                
             </div>
         {% endif %}
         
@@ -67,7 +52,7 @@
                     {{msg.feedback_reply}}
                 </div>
             {% else %}
-                <div class="container text-left p-3">
+                <div class="container text-left p-3" style="background-color: rgb(104, 17, 141); color: white;">
                     {{ msg.feedback_reply }}
                 </div>
             {% endif %}
