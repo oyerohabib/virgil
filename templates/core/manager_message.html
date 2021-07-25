@@ -71,7 +71,7 @@
                                 <td>{{ row.id }}</td>
                                 <td>{{ row.name }}</td>
                                 <td>
-                                    <a href="{% url 'feeds' id=row.id %}">Reply</a>
+                                    <button class="btn btn-primary"><a class="text-white" href="{% url 'feeds' id=row.id %}">Reply</a></button>
                                 </td>
                             </tr>
                             {% endfor %}
