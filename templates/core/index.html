@@ -14,11 +14,19 @@
 			<div class="row align-items-center">
 				<h4 class="text-blue text-center"></h4>
 				<canvas id="myChart" width="400" height="100"></canvas>
-				<div class="container text-center pt-4 pb-2">
-					<div></div>
-					<a href="?chart_type=daily"><button class="btn btn-primary">Daily</button></a>
-					<a href="?chart_type=monthly"><button class="btn btn-warning">Monthly</button></a>
-					<a href="?chart_type=yearly"><button class="btn btn-secondary">Yearly</button></a>
+				<div class="container text-center pt-4 pb-2 row">
+					<div class="col-md-6">
+						<form class="form-group" id="form">
+							<input class="form-control" type="month" id="start" name="start" value="{{present_month}}" required/>
+							<input type="submit" class="btn btn-primary form-control" value="Go">
+						</form>
+					</div>
+					<!-- {{present_month}} -->
+					<div class="col-md-6">
+						<a href="?chart_type=daily"><button class="btn btn-primary">Daily</button></a>
+						<a href="?chart_type=monthly"><button class="btn btn-warning">Monthly</button></a>
+						<a href="?chart_type=yearly"><button class="btn btn-secondary">Yearly</button></a>
+					</div> 
 				</div>
 			</div>
 		</div>
@@ -108,13 +116,19 @@
 		</div>
 	</div>
 </div>
+{% endblock %}
+{% block js %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 <script>
-	$(function(){
-        $('#sandbox-container div').datepicker({
-			format: "mm/yyyy"
+	$(document).ready(function(){
+		$('#form').on('submit', (e) => {
+			e.preventDefault();
+			var inp = $('#start');
+			// console.log();
+			var start = inp.val();
+			window.location = `?date=${start}`;
 		});
-    });
+	});
 </script>
 <script>
 var ctx = document.getElementById('myChart').getContext('2d');

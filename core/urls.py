@@ -32,6 +32,7 @@ urlpatterns = [
     path('manager_feedback_message/', manager_feedback_message, name="manager_feedback_message"),
     path('feeds/<int:id>', feeds, name="feeds"),
     path('close_feed/<int:id>', close_feed, name="close_feed"),
+    path('open_feed/<int:id>', open_feed, name="open_feed"),
     path('manager_feedback_message_reply/', manager_feedback_message_reply, name="manager_feedback_message_reply"),
 
     path('manager_feedback/', manager_feedback, name="manager_feedback"),

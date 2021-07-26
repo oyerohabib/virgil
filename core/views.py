@@ -50,7 +50,7 @@ def Dashboard(request):
         r['created_at__day']: r['sum'] for r in queryset2
     }
 
-    print(queryset3)
+    # print(queryset3)
 
     data2 = {
         datetime.date(1900, today.month, m).strftime('%d'): days.get(m, 0)
@@ -66,17 +66,29 @@ def Dashboard(request):
         for m in range(today.year-11, today.year+1)
     }
 
-    context = {"page_title":page_title, "errors":Errors, "transactions":Transactions, "data":data2, "monthly": data, "yearly": data4}
+    context = {"page_title":page_title, "errors":Errors, "transactions":Transactions, "data":data2, "monthly": data, "yearly": data4, "present_month": datetime.date(today.year, today.month, today.day).strftime('%m-%Y')}
 
-    print(data4)
+    # print(data4)
     try:
         if request.GET['chart_type'] == 'monthly':
-            context = {"page_title":page_title, "errors":Errors, "transactions":Transactions, "data":data}
+            context["data"] = data
         if request.GET['chart_type'] == 'yearly':
-            context = {"page_title":page_title, "errors":Errors, "transactions":Transactions, "data":data4}
-        
+            context["data"] = data4
+        if '-' in request.GET['chart_type']:
+            # print(request.GET['chart_type'])
+            yrmn = request.GET['chart_type'].split('-')
+
+            data5 = {
+                datetime.date(int(yrmn[0]), int(yrmn[1]), m).strftime('%d'): days.get(m, 0)
+                for m in range(1, 32)
+            }
+            
+            print(data5)
+            context["data"] = data5
+
     except Exception as e:
         pass
+    
 
     return render(request, "core/index.html", context)
 
@@ -356,8 +368,18 @@ def close_feed(request, id):
     feedback_data.is_closed = True
     feedback_data.save()
 
-    context = {"page_title":page_title, "feed": feedback_data}
-    return render(request, 'core/close_feed.html', context)
+    messages.success(request, "Feedback Closed")
+    return redirect(f'/feeds/{id}')
+
+def open_feed(request, id):
+    page_title = "Open Feedback"
+    feedback_data = FeedBack.objects.get(id=id)
+
+    feedback_data.is_closed = False
+    feedback_data.save()
+
+    messages.success(request, "Feedback Re Opened")
+    return redirect(f'/feeds/{id}')
 
 
 def manager_feedback_save(request):
