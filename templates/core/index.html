@@ -139,23 +139,23 @@ var myChart = new Chart(ctx, {
         datasets: [{
             label: 'CIGARETTECOUNTER',
             data: [{% for month,value in data.items %}'{{value}}',{% endfor %}],
-	        backgroundColor: [
-	          "#566573",
-	          "#99a3a4",
-	          "#dc7633",
-	          "#f5b041",
-	          "#f7dc6f",
-	          "#82e0aa",
-	          "#73c6b6",
-	          "#5dade2",
-	          "#a569bd",
-	          "#ec7063",
-	          "#a5754a",
-	          "green",
-	        ],
-            borderWidth: 1
-        }]
-    },
+			backgroundColor: [
+				// "#566573",
+				"#99a3a4",
+				"#dc7633",
+				"#f5b041",
+				"#f7dc6f",
+				"#82e0aa",
+				"#73c6b6",
+				"#5dade2",
+				"#a569bd",
+				"#ec7063",
+				"#a5754a",
+				"green",
+			],
+			borderWidth: 1
+	}]
+},
     options: {
         scales: {
             yAxes: [{

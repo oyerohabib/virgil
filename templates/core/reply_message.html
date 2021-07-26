@@ -30,7 +30,9 @@
                                     <td>{{ feedback.user.email }}</td>
                                     <!-- <td>{{ feedback.feedback }}</td> -->
                                     <td>{{ feedback.name }}</td>
-                                    <td><a href="{% url 'feeds' id=feedback.id %}">Reply</a></td>
+                                    <td>
+                                        <button class="btn btn-primary"><a class="text-white" href="{% url 'feeds' id=feedback.id %}">Reply</a></button>
+                                    </td>
                                 </tr>
                             </tbody>
                             {% endfor %}
