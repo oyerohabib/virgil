@@ -322,16 +322,37 @@ def feeds(request, id):
 
     msgs = Message.objects.filter(message_in=feed).order_by("created_at")
 
+    allow_access_for = User.objects.filter(user_type__is_manager=True)
+
+    permit = MessagePermission.objects.get(feedback=feed)
+
     if request.POST:
         # print()
         msg = Message.objects.create(user_id=request.user, message_in=feed, feedback_reply=request.POST['feedback_reply'])
         msg.save()
         return redirect(f'/feeds/{id}')
 
-    context = {"page_title":page_title, "msgs": msgs, "feed": feed}
+    context = {"page_title":page_title, "msgs": msgs, "feed": feed, "allow_access_for": allow_access_for, "permitted": permit}
 
     return render(request, 'core/feed_message.html', context)
 
+def InviteUser(request, id, user_id):
+    page_title = "Messages"
+
+    feed = FeedBack.objects.get(id=id)
+
+    user_ = User.objects.get(id=user_id)
+
+    try:
+        msg_ = MessagePermission.objects.get(user=user_)
+        messages.error(request, "User Already Added.")
+        return redirect(f'/feeds/{id}')
+    except Exception or TypeError:
+
+        msg = MessagePermission.objects.create(user=user_, feedback=feed)
+        msg.save()
+        messages.success(request, "User Added Successfully")
+        return redirect(f'/feeds/{id}')
 
 
 @csrf_exempt
@@ -351,6 +372,7 @@ def manager_feedback(request):
     page_title = "Manager Feedback"
     user_obj = User.objects.get(id=request.user.id)
     feedback_data = FeedBack.objects.filter(user=user_obj).order_by("-id")
+    invites = MessagePermission.objects.filter(user=user_obj).order_by("-id")
 
     if request.POST:
         # print()
@@ -358,9 +380,11 @@ def manager_feedback(request):
         feed.save()
         return redirect(f'/feeds/{feed.id}')
 
-    context = {"page_title":page_title, "feedback_data": feedback_data}
+    context = {"page_title":page_title, "feedback_data": feedback_data, "invites": invites}
     return render(request, 'core/manager_message.html', context)
 
+@login_required
+@admin_required()
 def close_feed(request, id):
     page_title = "Close Feedback"
     feedback_data = FeedBack.objects.get(id=id)
@@ -371,6 +395,8 @@ def close_feed(request, id):
     messages.success(request, "Feedback Closed")
     return redirect(f'/feeds/{id}')
 
+@login_required
+@admin_required()
 def open_feed(request, id):
     page_title = "Open Feedback"
     feedback_data = FeedBack.objects.get(id=id)

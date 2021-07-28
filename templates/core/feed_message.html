@@ -9,25 +9,57 @@
                 <div class="card card-primary">
                     <div class="card-header">
                         <h3 class="card-title">Messages</h3>
+                        {% if messages %}
+                        <div class="form-group">
+                            <div class="col-12">
+                                {% for message in messages %}
+                                {% if message.tags == "error" %}
+                                <div class="alert alert-danger alert-dismissible fade show mb-n4" role="alert" style="margin-top: 10px;">
+                                    {{ message }}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                {% elif message.tags == "success" %}
+                                <div class="alert alert-success alert-dismissible fade show mb-n4" role="alert" style="margin-top: 10px;">
+                                    {{ message }}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    {% if feed.user != request.user and not feed.is_closed %}
-        <a href="{% url 'close_feed' id=feed.id %}">
-            <button class="btn btn-danger text-right m-3">
-                Close Conversation
-            </button>
-        </a>
-    {% else %}
-        <a href="{% url 'open_feed' id=feed.id %}">
-            <button class="btn btn-success text-right m-3">
-                Re-Open Conversation
-            </button>
-        </a>
+    
+    {% if request.user.user_type.is_admin %}
+        {% if feed.is_closed == False %}
+            <a href="{% url 'close_feed' id=feed.id %}">
+                <button class="btn btn-danger text-right m-3">
+                    Close Conversation
+                </button>
+            </a>
+        {% else %}
+            <a href="{% url 'open_feed' id=feed.id %}">
+                <button class="btn btn-success text-right m-3">
+                    Re-Open Conversation
+                </button>
+            </a>
+        {% endif %}
+
+        <button class="btn btn-primary text-right m-3" data-toggle="modal" data-target="#exampleModalCenter">
+            Invite User
+        </button>
     {% endif %}
+    
     <div class="container text-center">
+        
         {% if feed.is_closed %}
             <div class="container my-2">
                 <div class="card card-danger p-3">
@@ -49,41 +81,113 @@
                 </div>
             </div>
         {% endif %}
-            
-
-        {% for msg in msgs %}
-            
-            {% if msg.user_id == feed.user %}
-                <div class="container text-right p-3" style="background-color: rgb(17, 108, 141); color: white;">
-                    {{msg.feedback_reply}}
-                </div>
-            {% else %}
-                <div class="container text-left p-3" style="background-color: rgb(104, 17, 141); color: white;">
-                    {{ msg.feedback_reply }}
-                </div>
-            {% endif %}
+                    
+        {% if request.user.user_type.is_admin or request.user == feed.user or permitted.user == request.user %}
+            {% for msg in msgs %}
                 
-        {% endfor %}
+                {% if msg.user_id == feed.user %}
+                    <div class="container text-right p-3" style="background-color: rgb(17, 108, 141); color: white;">
+                        <div class="container p-0 mb-3 text-right">
+                            {{msg.user_id.email}} - 
+                            {% if msg.user_id.user_type.is_admin %}
+                                Admin
+                            {% else %}
+                                Manager
+                            {% endif %}
+                                
+                        </div>
+                        <p>
+                            {{msg.feedback_reply}}
+                        </p>
+                    </div>
+                {% else %}
+                    <div class="container text-left p-3" style="background-color: rgb(178, 31, 236); color: white;">
+                        <div class="container p-0 mb-3 text-left">
+                            {{msg.user_id.email}} - 
+                            {% if msg.user_id.user_type.is_admin %}
+                                Admin
+                            {% else %}
+                                Manager
+                            {% endif %}
+                        </div>
+                        <p>
+                            {{msg.feedback_reply}}
+                        </p>
+                    </div>
+                {% endif %}
+                    
+            {% endfor %}
 
-        <form action="{% url 'feeds' id=feed.id %}" method="post" class="mt-4">
-            {% csrf_token %}
-            <textarea class="form-control" rows="5" id="feedback_reply" name="feedback_reply" 
-            {% if feed.is_closed %}
+            <form action="{% url 'feeds' id=feed.id %}" method="post" class="mt-4">
+                {% csrf_token %}
+                <textarea class="form-control" rows="5" id="feedback_reply" name="feedback_reply" 
+                {% if feed.is_closed %}
+                    disabled
+                {% endif %} required></textarea>
+                <button type="submit" class="btn btn-primary mt-3 text-left" {% if feed.is_closed %}
                 disabled
-            {% endif %} required></textarea>
-            <button type="submit" class="btn btn-primary mt-3 text-left" {% if feed.is_closed %}
-            disabled
-        {% endif %}>Send Reply</button>
-        </form>
+            {% endif %}>Send Reply</button>
+            </form>
+        {% endif %}
+        
         <!-- <div class="container">
             <div class="card card-danger">
                 <h4 class="text-left text-danger">
                     Error: No Messages Yet.
                 </h4>
             </div>
-        </div> -->
+        </div> --><!-- Modal -->
+        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Invite Manager</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                    <form action="" method="get" id="form">
+                        {% csrf_token %}
+                        <select class="form-select form-group" aria-label="Default select example" id="formdata">
+                            <option selected>Open this to select user</option>
+                            {% for usecase in allow_access_for %}
+                                <option value="{{usecase.id}}">{{usecase.email}}</option>
+                            {% endfor %}
+                        </select>
+                        <input type="submit" value="Invite User" class="btn btn-primary">
+                    </form>
+                </div>
+                <div class="modal-footer text-center">
+                    This for allows you to invite users to the conversation.
+                </div>
+                </div>
+            </div>
+            </div>
+        </div>
             
     </div>
 
 </div>
 {% endblock %}
+
+{% block js %}
+
+<script>
+    $(document).ready(function () {
+       $('#form').on('submit', (e) => {
+            e.preventDefault();
+
+            var data = $('#formdata');
+
+            var feed = "{{feed.id}}";
+
+            // console.log(feed);
+
+            window.location = `/invite/${feed}/${data.val()}`;
+       });
+    });
+</script>
+    
+{% endblock %}
+    

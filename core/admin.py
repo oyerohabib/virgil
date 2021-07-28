@@ -41,3 +41,5 @@ admin.site.register(Error)
 admin.site.register(Solution)
 admin.site.register(Message)
 admin.site.register(FeedBack)
+admin.site.register(MessagePermission)
+

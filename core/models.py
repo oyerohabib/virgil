@@ -258,6 +258,14 @@ class Message(models.Model):
     def __str__(self):
         return str(self.feedback_reply)
 
+class MessagePermission(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    feedback = models.ForeignKey(FeedBack, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.user.email
+
+
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     email_confirmed = models.BooleanField(default=False)

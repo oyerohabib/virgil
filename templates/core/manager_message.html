@@ -39,7 +39,7 @@
                         <div class="card-body">
                             <div class="form-group">
                                 <label>Feedback Title </label>
-                                <textarea name="feedback_message" class="form-control" rows="6" placeholder="Feedback Title"></textarea>
+                                <textarea name="feedback_message" class="form-control" rows="6" placeholder="Feedback Title" required></textarea>
                             </div>
                         </div>
                         <div class="card-footer">
@@ -67,13 +67,25 @@
                             </thead>
                             
                             {% for row in feedback_data %}
-                            <tr>
-                                <td>{{ row.id }}</td>
-                                <td>{{ row.name }}</td>
-                                <td>
-                                    <button class="btn btn-primary"><a class="text-white" href="{% url 'feeds' id=row.id %}">Reply</a></button>
-                                </td>
-                            </tr>
+                               
+                               {% if row.user == request.user %}
+                                    <tr>
+                                        <td>{{ row.id }}</td>
+                                        <td>{{ row.name }}</td>
+                                        
+                                        {% if row.is_closed %}
+                                            <td>
+                                                <button class="btn btn-danger"><a class="text-white" href="{% url 'feeds' id=row.id %}">Closed</a></button>
+                                            </td>
+                                        {% else %}
+                                            <td>
+                                                <button class="btn btn-primary"><a class="text-white" href="{% url 'feeds' id=row.id %}">Reply</a></button>
+                                            </td>
+                                        {% endif %}
+                                            
+                                    </tr>
+                               {% endif %}
+                                   
                             {% endfor %}
                         </table>
                     </div>
@@ -81,6 +93,51 @@
             </div>
         </div>
     </div>
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <div class="card card-success">
+                <div class="card-header">
+                    <h3 class="card-title">Feedback Invitations</h3>
+                </div>
+                <div class="card-body">
+                 <div class="table-responsive">
+                    <table class="table">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>#ID</th>
+                                <th>Feedback Name</th>
+                                <th>Created By</th>
+                                <th>Feedback Reply</th>
+                            </tr>
+                        </thead>
+                        
+                        {% for row in invites %}
+                           
+                           {% if row.user == request.user %}
+                                <tr>
+                                    <td>{{ row.id }}</td>
+                                    <td>{{ row.feedback.name }}</td>
+                                    <td>{{ row.feedback.user.email }}</td>
+                                    {% if row.feedback.is_closed %}
+                                        <td>
+                                            <button class="btn btn-danger"><a class="text-white" href="{% url 'feeds' id=row.feedback.id %}">Closed</a></button>
+                                        </td>
+                                    {% else %}
+                                        <td>
+                                            <button class="btn btn-primary"><a class="text-white" href="{% url 'feeds' id=row.feedback.id %}">Reply</a></button>
+                                        </td>
+                                    {% endif %}
+                                        
+                                </tr>
+                           {% endif %}
+                               
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </div>
 </div>
 {% endblock %}

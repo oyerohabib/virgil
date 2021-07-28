@@ -30,9 +30,17 @@
                                     <td>{{ feedback.user.email }}</td>
                                     <!-- <td>{{ feedback.feedback }}</td> -->
                                     <td>{{ feedback.name }}</td>
-                                    <td>
-                                        <button class="btn btn-primary"><a class="text-white" href="{% url 'feeds' id=feedback.id %}">Reply</a></button>
-                                    </td>
+                                    
+                                    {% if feedback.is_closed %}
+                                        <td>
+                                            <button class="btn btn-danger"><a class="text-white" href="{% url 'feeds' id=feedback.id %}">Closed</a></button>
+                                        </td>
+                                    {% else %}
+                                        <td>
+                                            <button class="btn btn-primary"><a class="text-white" href="{% url 'feeds' id=feedback.id %}">Reply</a></button>
+                                        </td>
+                                    {% endif %}
+                                        
                                 </tr>
                             </tbody>
                             {% endfor %}
