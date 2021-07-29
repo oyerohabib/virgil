@@ -40,8 +40,10 @@
 						<td>
 							{% if transaction.status == "pending" %}
 								<span style="padding: 7px 12px;" class="alert alert-info">PENDING</span>
-							{% elif transaction.status == "declined" %}
-								<span style="padding: 7px 12px;" class="alert alert-danger">DECLINED</span>
+								{% elif transaction.status == "declined" %}
+									<span style="padding: 7px 12px;" class="alert alert-danger">DECLINED</span>
+							{% elif transaction.status == "modify" %}
+								<span style="padding: 7px 12px;" class="alert alert-warning">MODIFIED</span>
 							{% else %}
 								<span style="padding: 7px 12px;" class="alert alert-success">COMPLETED</span>
 							{% endif %}
