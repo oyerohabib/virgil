@@ -33,9 +33,11 @@ def Dashboard(request):
 
     queryset = Transaction.objects.values('created_at__month').annotate(sum= Sum('cigarettecounter')).filter(created_at__year=today.year, status="completed").order_by('created_at__month')
 
-    queryset2 = Transaction.objects.values('created_at__day').filter(created_at__year=today.year, status="completed").annotate(sum= Sum('cigarettecounter')).order_by('created_at__month')
+    queryset2 = Transaction.objects.values('created_at__day').filter(created_at__year=today.year, created_at__month=today.month,status="completed").annotate(sum= Sum('cigarettecounter')).order_by('created_at__month')
 
     queryset3 = Transaction.objects.values('created_at__year').filter(status="completed").annotate(sum= Sum('cigarettecounter')).order_by('created_at__year')
+
+    month_range = ['04', '06', '11', '09']
 
     data = {
         r['created_at__month']: r['sum'] for r in queryset
@@ -51,11 +53,16 @@ def Dashboard(request):
     }
 
     # print(queryset3)
-
-    data2 = {
-        datetime.date(1900, today.month, m).strftime('%d'): days.get(m, 0)
-        for m in range(1, 32)
-    }
+    if today.month in month_range:
+        data2 = {
+            datetime.date(1900, today.month, m).strftime('%d'): days.get(m, 0)
+            for m in range(1, 31)
+        }
+    else:
+        data2 = {
+            datetime.date(1900, today.month, m).strftime('%d'): days.get(m, 0)
+            for m in range(1, 32)
+        }
 
     data3 = {
         r['created_at__year']: r['sum'] for r in queryset3
@@ -70,23 +77,35 @@ def Dashboard(request):
 
     # print(data4)
     try:
+        if '-' in request.GET['date']:
+            # print(request.GET['chart_type'])
+            yrmn = request.GET['date'].split('-')
+
+            queryset2 = Transaction.objects.values('created_at__day').filter(created_at__year=yrmn[0], created_at__month=yrmn[1],status="completed").annotate(sum= Sum('cigarettecounter')).order_by('created_at__day')
+
+            days = {
+                r['created_at__day']: r['sum'] for r in queryset2
+            }
+
+            if yrmn[1] in month_range:
+                data5 = {
+                    datetime.date(int(yrmn[0]), int(yrmn[1]), m).strftime('%d'): days.get(m, 0)
+                    for m in range(1, 31)
+                }
+            else:
+                data5 = {
+                    datetime.date(int(yrmn[0]), int(yrmn[1]), m).strftime('%d'): days.get(m, 0)
+                    for m in range(1, 32)
+                }
+            # print(data5)
+            context["data"] = data5
+
         if request.GET['chart_type'] == 'monthly':
             context["data"] = data
         if request.GET['chart_type'] == 'yearly':
             context["data"] = data4
-        if '-' in request.GET['chart_type']:
-            # print(request.GET['chart_type'])
-            yrmn = request.GET['chart_type'].split('-')
-
-            data5 = {
-                datetime.date(int(yrmn[0]), int(yrmn[1]), m).strftime('%d'): days.get(m, 0)
-                for m in range(1, 32)
-            }
-            
-            print(data5)
-            context["data"] = data5
-
     except Exception as e:
+        # print(e)
         pass
     
 
@@ -324,7 +343,10 @@ def feeds(request, id):
 
     allow_access_for = User.objects.filter(user_type__is_manager=True)
 
-    permit = MessagePermission.objects.get(feedback=feed)
+    try:
+        permit = MessagePermission.objects.get(feedback=feed)
+    except Exception:
+        permit = None
 
     if request.POST:
         # print()
