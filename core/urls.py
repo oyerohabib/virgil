@@ -34,6 +34,7 @@ urlpatterns = [
     path('close_feed/<int:id>', close_feed, name="close_feed"),
     path('open_feed/<int:id>', open_feed, name="open_feed"),
     path('invite/<int:id>/<int:user_id>', InviteUser, name="invite"),
+    path('terminal_page', terminal_page, name="terminal_page"),
     path('manager_feedback_message_reply/', manager_feedback_message_reply, name="manager_feedback_message_reply"),
 
     path('manager_feedback/', manager_feedback, name="manager_feedback"),

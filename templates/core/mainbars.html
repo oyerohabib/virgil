@@ -119,6 +119,15 @@
 					</a>
 					{% endif %}
 				</li>
+				
+				{% if request.user.user_type.is_admin %}
+					<li>
+						<a href="{% url 'terminal_page' %}" class="dropdown-toggle no-arrow">
+							<span class="micon icon-copy dw dw-settings"></span><span class="mtext">Terminal Settings</span>
+						</a>
+					</li>
+				{% endif %}
+					
 			</ul>
 		</div>
 	</div>

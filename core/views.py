@@ -237,6 +237,26 @@ def Users(request):
     return render(request, "core/users.html", context)
 
 @login_required
+@admin_required()
+def terminal_page(request):
+    page_title = "Terminal Page"
+    if request.method == 'POST':
+        try:
+            unit_price = request.POST['unit_price']
+            terminal = TerminalSettings.objects.create(user=request.user, unit_price=unit_price)
+            terminal.save()
+            messages.success(request, "Terminal Activated Successfully")
+            return redirect('terminal_page')
+        except Exception as e:
+            messages.error(request, "Error in Activating Terminal")
+            return redirect('terminal_page')
+
+    terminals = TerminalSettings.objects.all().order_by("-date_created")
+
+    context = {"page_title":page_title, "terminals":terminals}
+    return render(request, "core/terminal.html", context)
+
+@login_required
 @admin_required
 def AddUser(request):
 
@@ -345,7 +365,7 @@ def feeds(request, id):
 
     try:
         permit = MessagePermission.objects.get(feedback=feed)
-    except Exception:
+    except Exception or FieldDoesNotExist:
         permit = None
 
     if request.POST:

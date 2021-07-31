@@ -174,6 +174,14 @@ class Station(models.Model):
     def __str__(self):
         return self.name
 
+class TerminalSettings(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_('user'), related_name='terminal_settings')
+    unit_price = models.FloatField(default=0.0)
+    date_created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.user) + " - " + str(self.unit_price)
+
 class Transaction(models.Model):
 
     TRANSACTION_STATUS = (
@@ -184,7 +192,7 @@ class Transaction(models.Model):
         )
 
     cigarettecounter = models.IntegerField()
-    price = models.FloatField()
+    price = models.FloatField(blank=True, null=True)
     videolink = models.URLField()
     status = models.CharField(default="pending" ,choices=TRANSACTION_STATUS, max_length=10)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -207,6 +215,17 @@ class Transaction(models.Model):
     @property    
     def get_user_email(self):
         return self.user.email
+    
+    
+    def subject_initials(self):
+        unit_price = TerminalSettings.objects.last().unit_price
+
+        return float(unit_price) * self.cigarettecounter
+
+    def save(self, *args, **kwargs):
+        if not self.price:
+            self.price = self.subject_initials()
+        super(Transaction, self).save(*args, **kwargs)
 
 class Error(models.Model):
 

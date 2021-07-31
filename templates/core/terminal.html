@@ -1,0 +1,78 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block content %}
+{% include 'core/mainbars.html' %}
+	<div class="main-container">
+        {% if messages %}
+        <div class="form-group">
+            <div class="col-12">
+                {% for message in messages %}
+                {% if message.tags == "error" %}
+                <div class="alert alert-danger alert-dismissible fade show mb-n4" role="alert" style="margin-top: 10px;">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {% elif message.tags == "success" %}
+                <div class="alert alert-success alert-dismissible fade show mb-n4" role="alert" style="margin-top: 10px;">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+	<div class="pd-ltr-20">
+		<div class="row">
+			<div class="col-xl-12 mb-30">
+		<div class="pd-20 card-box mb-30">
+		<div class="clearfix mb-20">
+			<div class="pull-left">
+				<h4 class="text-blue h4">Terminal Settings</h4>
+			</div>
+			<div class="pull-right">
+				<a href="{% url 'index' %}" class="btn btn-primary btn-sm"><i class="fa fa-arrow-left"></i>&nbsp; Go Back</a>
+			</div>
+		</div>
+		<div class="container mt-5 mb-5 pb-5">
+            <form action="{% url 'terminal_page' %}" method="post">
+                <div class="form-group">
+                    {% csrf_token %}
+                    <input class="form-control" type="number" name="unit_price" id="unit_price" step="0.01" required />
+
+                    <input type="submit" value="Submit" class="form-control btn btn-primary " />
+                </div>
+            </form>
+        </div>
+        <div class="container">
+            <table class="data-table table nowrap">
+				<thead>
+					<tr>
+						<th>NO</th>
+						<th>User</th>
+						<th>Unit Price(octs)</th>
+						<th>Date Created</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for terminal in terminals %}
+					<tr>
+						<td>{{forloop.counter}}</td>
+                        <td>{{terminal.user.email}}</td>
+                        <td>{{terminal.unit_price}}</td>
+                        <td>{{terminal.date_created}}</td>
+					</tr><!-- far fa-file-pdf -->
+					{% endfor %}
+				</tbody>
+			</table>
+        </div>
+		</div>
+			</div>
+		</div>
+	</div>
+	</div>
+{% endblock %}
