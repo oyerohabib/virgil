@@ -77,29 +77,6 @@ def Dashboard(request):
 
     # print(data4)
     try:
-        # if '-' in request.GET['date']:
-        #     # print(request.GET['chart_type'])
-        #     yrmn = request.GET['date'].split('-')
-
-        #     queryset2 = Transaction.objects.values('created_at__day').filter(created_at__year=yrmn[0], created_at__month=yrmn[1],status="completed").annotate(sum= Sum('cigarettecounter')).order_by('created_at__day')
-
-        #     days = {
-        #         r['created_at__day']: r['sum'] for r in queryset2
-        #     }
-
-        #     if yrmn[1] in month_range:
-        #         data5 = {
-        #             datetime.date(int(yrmn[0]), int(yrmn[1]), m).strftime('%d'): days.get(m, 0)
-        #             for m in range(1, 31)
-        #         }
-        #     else:
-        #         data5 = {
-        #             datetime.date(int(yrmn[0]), int(yrmn[1]), m).strftime('%d'): days.get(m, 0)
-        #             for m in range(1, 32)
-        #         }
-        #     # print(data5)
-        #     context["data"] = data5
-
         if request.GET['chart_type'] == 'monthly':
             print(data)
             context["data"] = data
@@ -109,6 +86,32 @@ def Dashboard(request):
             context["data"] = data4
     except Exception as e:
         # print(e)
+        pass
+
+    try:
+        if '-' in request.GET['date']:
+            # print(request.GET['chart_type'])
+            yrmn = request.GET['date'].split('-')
+
+            queryset2 = Transaction.objects.values('created_at__day').filter(created_at__year=yrmn[0], created_at__month=yrmn[1],status="completed").annotate(sum= Sum('cigarettecounter')).order_by('created_at__year')
+
+            days = {
+                r['created_at__day']: r['sum'] for r in queryset2
+            }
+
+            if yrmn[1] in month_range:
+                data5 = {
+                    datetime.date(int(yrmn[0]), int(yrmn[1]), m).strftime('%d'): days.get(m, 0)
+                    for m in range(1, 31)
+                }
+            else:
+                data5 = {
+                    datetime.date(int(yrmn[0]), int(yrmn[1]), m).strftime('%d'): days.get(m, 0)
+                    for m in range(1, 32)
+                }
+            # print(data5)
+            context["data"] = data5
+    except Exception:
         pass
     
 
