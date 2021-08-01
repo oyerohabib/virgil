@@ -5,7 +5,7 @@ from .models import *
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import *
-import datetime
+import datetime, random
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import *
 from .decorators import manager_required, admin_required
@@ -38,6 +38,9 @@ def Dashboard(request):
     queryset3 = Transaction.objects.values('created_at__year').filter(status="completed").annotate(sum= Sum('cigarettecounter')).order_by('created_at__year')
 
     month_range = ['04', '06', '11', '09']
+    
+    chars = '0123456789ABCDEF'
+    colors = ['#'+''.join(random.sample(chars,6)) for i in range(50)]
 
     data = {
         r['created_at__month']: r['sum'] for r in queryset
@@ -73,16 +76,14 @@ def Dashboard(request):
         for m in range(today.year-11, today.year+1)
     }
 
-    context = {"page_title":page_title, "errors":Errors, "transactions":Transactions, "data":data2, "monthly": data, "yearly": data4, "present_month": datetime.date(today.year, today.month, today.day).strftime('%m-%Y')}
+    context = {"colors":colors, "page_title":page_title, "errors":Errors, "transactions":Transactions, "data":data2, "monthly": data, "yearly": data4, "present_month": datetime.date(today.year, today.month, today.day).strftime('%m-%Y')}
 
     # print(data4)
     try:
         if request.GET['chart_type'] == 'monthly':
-            print(data)
             context["data"] = data
             
         if request.GET['chart_type'] == 'yearly':
-            print(data4)
             context["data"] = data4
     except Exception as e:
         # print(e)

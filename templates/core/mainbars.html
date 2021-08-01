@@ -1,5 +1,5 @@
 {% load static %}
-<!-- <div class="pre-loader">
+<div class="pre-loader">
 <div class="pre-loader-box">
 	<div class="loader-logo"><img src="{% static 'vendors/images/logo1.png' %}" style="width: 120px; height: 120px;" alt=""></div>
 	<div class='loader-progress' id="progress_div">
@@ -10,7 +10,7 @@
 		Loading...
 	</div>
 </div>
-</div> -->
+</div>
 <div class="header">
 	<div class="header-left">
 		<div class="menu-icon dw dw-menu"></div>
@@ -44,7 +44,7 @@
 			<div class="dropdown">
 				<a class="dropdown-toggle" href="#" role="button" data-toggle="dropdown">
 					<span class="user-icon">
-						<img src="{{request.user.get_picture_url}}" alt="Profile Image">
+						<img src="{{request.user.get_picture_url}}" class="height-100-p" alt="Profile Image">
 					</span>
 					<span class="user-name">{{request.user.firstname}}</span>
 				</a>
