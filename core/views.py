@@ -55,12 +55,12 @@ def Dashboard(request):
     # print(queryset3)
     if today.month in month_range:
         data2 = {
-            datetime.date(1900, today.month, m).strftime('%d'): days.get(m, 0)
+            datetime.date(today.year, today.month, m).strftime('%d'): days.get(m, 0)
             for m in range(1, 31)
         }
     else:
         data2 = {
-            datetime.date(1900, today.month, m).strftime('%d'): days.get(m, 0)
+            datetime.date(today.year, today.month, m).strftime('%d'): days.get(m, 0)
             for m in range(1, 32)
         }
 
@@ -77,32 +77,35 @@ def Dashboard(request):
 
     # print(data4)
     try:
-        if '-' in request.GET['date']:
-            # print(request.GET['chart_type'])
-            yrmn = request.GET['date'].split('-')
+        # if '-' in request.GET['date']:
+        #     # print(request.GET['chart_type'])
+        #     yrmn = request.GET['date'].split('-')
 
-            queryset2 = Transaction.objects.values('created_at__day').filter(created_at__year=yrmn[0], created_at__month=yrmn[1],status="completed").annotate(sum= Sum('cigarettecounter')).order_by('created_at__day')
+        #     queryset2 = Transaction.objects.values('created_at__day').filter(created_at__year=yrmn[0], created_at__month=yrmn[1],status="completed").annotate(sum= Sum('cigarettecounter')).order_by('created_at__day')
 
-            days = {
-                r['created_at__day']: r['sum'] for r in queryset2
-            }
+        #     days = {
+        #         r['created_at__day']: r['sum'] for r in queryset2
+        #     }
 
-            if yrmn[1] in month_range:
-                data5 = {
-                    datetime.date(int(yrmn[0]), int(yrmn[1]), m).strftime('%d'): days.get(m, 0)
-                    for m in range(1, 31)
-                }
-            else:
-                data5 = {
-                    datetime.date(int(yrmn[0]), int(yrmn[1]), m).strftime('%d'): days.get(m, 0)
-                    for m in range(1, 32)
-                }
-            # print(data5)
-            context["data"] = data5
+        #     if yrmn[1] in month_range:
+        #         data5 = {
+        #             datetime.date(int(yrmn[0]), int(yrmn[1]), m).strftime('%d'): days.get(m, 0)
+        #             for m in range(1, 31)
+        #         }
+        #     else:
+        #         data5 = {
+        #             datetime.date(int(yrmn[0]), int(yrmn[1]), m).strftime('%d'): days.get(m, 0)
+        #             for m in range(1, 32)
+        #         }
+        #     # print(data5)
+        #     context["data"] = data5
 
         if request.GET['chart_type'] == 'monthly':
+            print(data)
             context["data"] = data
+            
         if request.GET['chart_type'] == 'yearly':
+            print(data4)
             context["data"] = data4
     except Exception as e:
         # print(e)
