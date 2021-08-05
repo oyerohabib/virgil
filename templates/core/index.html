@@ -23,9 +23,9 @@
 					</div>
 					<!-- {{present_month}} -->
 					<div class="col-md-6">
-						<a href="?chart_type=daily"><button class="btn btn-primary">Daily</button></a>
-						<a href="?chart_type=monthly"><button class="btn btn-warning">Monthly</button></a>
-						<a href="?chart_type=yearly"><button class="btn btn-secondary">Yearly</button></a>
+						<a href="?chart_type=daily"><button class="btn" style="background-color: #008c93; color: white;border-color: #008c93;">Daily</button></a>
+						<a href="?chart_type=monthly"><button class="btn" style="background-color: #025e72; color: white;border-color: #025e72;">Monthly</button></a>
+						<a href="?chart_type=yearly"><button class="btn" style="background-color: #6cbad8; color: white;border-color: #6cbad8;">Yearly</button></a>
 					</div> 
 				</div>
 			</div>
@@ -41,7 +41,7 @@
 				<a href="{% url 'errors' %}" class="btn btn-primary btn-sm"> View all &nbsp;<i class="fa fa-arrow-right"></i></a>
 			</div>
 		</div>
-			<table class="data-table table nowrap">
+			<table class="data-table table table-responsive-lg nowrap">
 				<thead>
 					<tr>
 						<th>NO</th>
@@ -81,7 +81,7 @@
 				<a href="{% url 'transactions' %}" class="btn btn-primary btn-sm"> View all &nbsp;<i class="fa fa-arrow-right"></i></a>
 			</div>
 		</div>
-			<table class="data-table table nowrap">
+			<table class="data-table table table-responsive-lg nowrap">
 				<thead>
 					<tr>
 						<th>NO</th>

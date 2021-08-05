@@ -168,7 +168,7 @@ class Station(models.Model):
     country = models.CharField(max_length=20)
     ipaddress = models.CharField(max_length=20)
     macaddress = models.CharField(max_length=20)
-    # cigarettecounter = models.IntegerField()
+    unit_price = models.FloatField(default=0.0)
     status = models.CharField(default="pending", choices=STATION_STATUS, max_length=10)
 
     def __str__(self):
